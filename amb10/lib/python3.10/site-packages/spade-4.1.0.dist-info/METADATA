@@ -1,0 +1,145 @@
+Metadata-Version: 2.4
+Name: spade
+Version: 4.1.0
+Summary: Smart Python Agent Development Environment
+Home-page: https://github.com/javipalanca/spade
+Author: Javi Palanca
+Author-email: jpalanca@gmail.com
+Maintainer: Javi Palanca
+License: MIT
+Project-URL: Homepage, https://github.com/javipalanca/spade
+Project-URL: Repository, https://github.com/javipalanca/spade
+Keywords: spade
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Classifier: Operating System :: MacOS :: MacOS X
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Classifier: Topic :: Internet :: XMPP
+Description-Content-Type: text/x-rst
+License-File: LICENSE
+License-File: AUTHORS.rst
+Requires-Dist: slixmpp<1.10,>=1.9.1
+Requires-Dist: aiohttp>=3.10.4
+Requires-Dist: aiohttp_jinja2==1.6
+Requires-Dist: jinja2==3.0.3
+Requires-Dist: jinja2-time==0.2.0
+Requires-Dist: timeago==1.0.16
+Requires-Dist: singletonify==0.2.4
+Requires-Dist: pytz==2022.1
+Requires-Dist: pyjabber>=0.2.9
+Requires-Dist: rich>=13.9.4
+Requires-Dist: uvloop>=0.21.0; platform_system != "Windows"
+Requires-Dist: winloop>=0.1.7; platform_system == "Windows"
+Dynamic: author-email
+Dynamic: home-page
+Dynamic: license-file
+
+=====
+SPADE
+=====
+
+
+.. image:: https://img.shields.io/pypi/v/spade.svg
+    :target: https://pypi.python.org/pypi/spade
+
+.. image:: https://img.shields.io/pypi/pyversions/spade.svg
+    :target: https://pypi.python.org/pypi/spade
+    :alt: Python Versions
+
+.. image:: https://img.shields.io/github/languages/count/javipalanca/spade?label=languages
+    :alt: Languages
+    :target: https://pepy.tech/project/spade
+
+.. image:: https://img.shields.io/github/languages/code-size/javipalanca/spade
+    :alt: Code Size
+    :target: https://pepy.tech/project/spade
+
+.. image:: https://img.shields.io/pypi/l/spade
+    :target: https://opensource.org/licenses/MIT
+    :alt: MIT License
+
+.. image:: https://pepy.tech/badge/spade
+    :target: https://pepy.tech/project/spade
+    :alt: Downloads
+
+.. image:: https://github.com/javipalanca/spade/actions/workflows/python-package.yml/badge.svg
+    :target: https://github.com/javipalanca/spade/actions/workflows/python-package.yml
+    :alt: Continuous Integration Status
+
+.. image:: https://coveralls.io/repos/github/javipalanca/spade/badge.svg?branch=master
+    :target: https://coveralls.io/github/javipalanca/spade?branch=master
+    :alt: Code Coverage Status
+
+.. image:: https://readthedocs.org/projects/spade/badge/?version=latest
+    :target: https://spade-mas.readthedocs.io?badge=latest
+    :alt: Documentation Status
+
+.. image:: https://img.shields.io/pypi/format/spade.svg
+    :target: https://pypi.python.org/pypi/spade
+
+
+
+
+Smart Python Agent Development Environment
+
+A multi-agent systems platform written in Python and based on instant messaging (XMPP).
+
+Develop agents that can chat both with other agents and humans.
+
+
+* Free software: MIT license
+* Documentation: http://spade-mas.readthedocs.io/
+
+
+Features
+--------
+
+* Multi-agent platform based on XMPP_
+* Presence notification allows the system to know the current state of the agents in real-time
+* Python >=3.8
+* Asyncio-based
+* Agent model based on behaviours
+* Supports FIPA metadata using XMPP Data Forms (XEP-0004_: Data Forms)
+* Web-based interface
+* Incorporates a custom XMPP server (pyjabber)
+* Use any XMPP server
+
+Plugins
+-------
+
+- **spade_bdi** (BDI agents with AgentSpeak):
+        - Code: https://github.com/javipalanca/spade_bdi
+        - Documentation: https://spade-bdi.readthedocs.io
+- **spade_pubsub** (PubSub protocol for agents):
+        - Code: https://github.com/javipalanca/spade_pubsub
+        - Documentation: https://spade-pubsub.readthedocs.io
+- **spade_artifact** (Artifacts for SPADE):
+        - Code: https://github.com/javipalanca/spade_artifact
+        - Documentation: https://spade-artifact.readthedocs.io
+- **spade_norms** (Norms for SPADE):
+        - Code: https://github.com/javipalanca/spade_norms
+        - Documentation: https://spade-norms.readthedocs.io/
+- **spade_bokeh** (bokeh plots for agents):
+        - Code: https://github.com/javipalanca/spade_bokeh
+        - Documentation: https://spade-bokeh.readthedocs.io
+
+Credits
+---------
+
+This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
+
+.. _XMPP: http://www.xmpp.org
+.. _`XEP-0004` : https://xmpp.org/extensions/xep-0004.html
+.. _Cookiecutter: https://github.com/audreyr/cookiecutter
+.. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
+
