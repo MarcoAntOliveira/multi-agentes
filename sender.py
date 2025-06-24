@@ -25,8 +25,6 @@ class SenderAgent(Agent):
                 await self.send(msg)
                 print("Message sent!")
 
-                # stop agent from behaviour
-                await self.agent.stop()
             else:
                 print("Did not received any message after 10 seconds")
 
@@ -45,7 +43,7 @@ class SenderAgent(Agent):
 async def main():
 
 
-  senderagent = SenderAgent("marcoolivera096@xmpp.jp", "m0a5r0c8o")
+  senderagent = SenderAgent("marcoolivera731@xmpp.jp", "m0a5r0c8o")
   await senderagent.start(auto_register=True)
   print("Sender started")
 

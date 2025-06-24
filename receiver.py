@@ -13,7 +13,7 @@ class ReceiverAgent(Agent):
             print(msg)
             if msg:
                 print("Message received with content: {}".format(msg.body))
-                response = Message(to="marcoolivera096@xmpp.jp")
+                response = Message(to="marcoolivera731@xmpp.jp")
                 response.set_metadata("performative", "inform")
                 response.body = "send response"
 
