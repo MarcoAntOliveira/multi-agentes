@@ -3,8 +3,22 @@ from spade.agent import Agent
 from spade.behaviour import CyclicBehaviour
 from spade.message import Message
 import time
+import random
 
+# Lista de funções possíveis
+funcoes = [
+    "A função é 1º grau",
+    "A função é 2º grau",
+    "A função é 3º grau",
+    "A função é exponencial",
+    "A função é logarítmica",
+    "A função é senoide",
+    "A função é tangente",
+    "A função é cossenoide"
+]
 
+# Escolhe uma aleatoriamente
+funcao_aleatoria = random.choice(funcoes)
 class ReceiverAgent(Agent):
     class RecvBehav(CyclicBehaviour):
         async def run(self):
@@ -16,7 +30,7 @@ class ReceiverAgent(Agent):
                 if msg.body == "Qual é a função":
                     response = Message(to="marcoolivera731@xmpp.jp")
                     response.set_metadata("performative", "inform")
-                    response.body = "A função é 1grau"
+                    response.body = funcao_aleatoria
                     await self.send(response)
                     print("Resposta enviada!")
 
