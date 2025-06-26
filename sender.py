@@ -2,7 +2,7 @@ import spade
 from spade.agent import Agent
 from spade.behaviour import CyclicBehaviour
 from spade.message import Message
-
+import time
 
 class SenderAgent(Agent):
     class InformBehav(CyclicBehaviour):
@@ -31,7 +31,7 @@ class SenderAgent(Agent):
             else:
                 print("Nenhuma resposta recebida após 10 segundos.")
 
-            await self.sleep(5)  # Espera antes de tentar de novo
+
 
     async def setup(self):
         print("SenderAgent iniciado")
@@ -40,9 +40,16 @@ class SenderAgent(Agent):
 
 async def main():
     senderagent = SenderAgent("marcoolivera731@xmpp.jp", "m0a5r0c8o")
-    await senderagent.start(auto_register=True)
+    await senderagent.start()
     print("Sender iniciado")
-    await senderagent.web.start(hostname="127.0.0.1", port="10001")
+
+
+    while senderagent.is_alive():
+        try:
+            time.sleep(1)
+        except KeyboardInterrupt:
+            senderagent.stop()
+            break
 
 
 if __name__ == "__main__":
