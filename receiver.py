@@ -2,6 +2,7 @@ import spade
 from spade.agent import Agent
 from spade.behaviour import CyclicBehaviour
 from spade.message import Message
+import time
 
 
 class ReceiverAgent(Agent):
@@ -35,10 +36,14 @@ class ReceiverAgent(Agent):
 
 async def main():
     receiveragent = ReceiverAgent("marcoolivera096@xmpp.jp", "m0a5r0c8o")
-    await receiveragent.start(auto_register=True)
+    await receiveragent.start()
     print("Agente iniciado.")
-    await receiveragent.web.start(hostname="127.0.0.1", port="10000")  # Interface web opcional
-
+    while receiveragent.is_alive():
+      try:
+          time.sleep(1)
+      except KeyboardInterrupt:
+          receiveragent.stop()
+          break
 
 if __name__ == "__main__":
     spade.run(main())
