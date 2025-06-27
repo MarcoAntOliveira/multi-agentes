@@ -4,22 +4,27 @@ from spade.behaviour import CyclicBehaviour
 from spade.message import Message
 import time
 import random
+import asyncio
+from include.funcoes import *
 
 # Lista de funções possíveis
 funcoes = [
     "A função é 1º grau",
-    "A função é 2º grau",
-    "A função é 3º grau",
-    "A função é exponencial",
-    "A função é logarítmica",
-    "A função é senoide",
-    "A função é tangente",
-    "A função é cossenoide"
+    # "A função é 2º grau",
+    # "A função é 3º grau",
+    # "A função é exponencial",
+    # "A função é logarítmica",
+    # "A função é senoide",
+    # "A função é tangente",
+    # "A função é cossenoide"
 ]
 
 # Escolhe uma aleatoriamente
 funcao_aleatoria = random.choice(funcoes)
+
 class ReceiverAgent(Agent):
+
+
     class RecvBehav(CyclicBehaviour):
         async def run(self):
             print("Esperando mensagem...")
@@ -28,18 +33,28 @@ class ReceiverAgent(Agent):
                 print(f"Mensagem recebida: {msg.body}")
 
                 if msg.body == "Qual é a função":
-                    response = Message(to="marcoolivera731@xmpp.jp")
-                    response.set_metadata("performative", "inform")
-                    response.body = funcao_aleatoria
-                    await self.send(response)
-                    print("Resposta enviada!")
+                  response = Message(to="marcoolivera731@xmpp.jp")
+                  response.set_metadata("performative", "inform")
+                  response.body = funcao_aleatoria
+                  await self.send(response)
+                  print("Resposta enviada!")
 
-                elif msg.body == "1,2":
-                    numeros = [int(n.strip()) for n in msg.body.split(",")]
-                    print(f"Números recebidos: {numeros}")
+                elif msg.body.isdigit():
+                  f = grau1()
+                  x_value = int(msg.body)
+                  resultado = f(x_value)
+
+                  # valor = Message(to="marcoolivera731@xmpp.jp")
+                  # valor.set_metadata("performative", "inform")
+                  # valor.body = str(resultado)
+
+                  # await self.send(valor)  # Corrigido
+
+
+               
 
                 else:
-                    print("Mensagem não reconhecida.")
+                  print("Mensagem não reconhecida.")
             else:
                 print("Nenhuma mensagem recebida após 10 segundos.")
 
@@ -52,12 +67,15 @@ async def main():
     receiveragent = ReceiverAgent("marcoolivera096@xmpp.jp", "m0a5r0c8o")
     await receiveragent.start()
     print("Agente iniciado.")
+
+
     while receiveragent.is_alive():
-      try:
-          time.sleep(1)
-      except KeyboardInterrupt:
-          receiveragent.stop()
-          break
+        try:
+            await asyncio.sleep(1)
+        except KeyboardInterrupt:
+            await receiveragent.stop()
+            break
+
 
 if __name__ == "__main__":
     spade.run(main())
