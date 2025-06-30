@@ -1,80 +1,111 @@
 import spade
 from spade.agent import Agent
-from spade.behaviour import CyclicBehaviour
+from spade.behaviour import CyclicBehaviour, OneShotBehaviour
 from spade.message import Message
-import time
+from spade.template import Template
 import random
 import asyncio
-from include.funcoes import *
+from include.funcoes import grau1  # Função que retorna f(x) = ax + b como lambda
 
-# Lista de funções possíveis
-funcoes = [
-    "A função é 1º grau",
-    # "A função é 2º grau",
-    # "A função é 3º grau",
-    # "A função é exponencial",
-    # "A função é logarítmica",
-    # "A função é senoide",
-    # "A função é tangente",
-    # "A função é cossenoide"
-]
 
-# Escolhe uma aleatoriamente
-funcao_aleatoria = random.choice(funcoes)
+FUNCOES_DISPONIVEIS = [#"A função é 1º grau",
+                      #  "A função é 2º grau",
+                       "A função é 3º grau",
+                       ]
+
 
 class ReceiverAgent(Agent):
+    async def setup(self):
+        print("ReceiverAgent iniciado.")
 
+        # Define uma função de 1º grau apenas uma vez
+        self.f = grau1()
 
-    class RecvBehav(CyclicBehaviour):
+        # -------------------------------
+        # Template para "Qual é a função"
+        # -------------------------------
+        def match_qual_e_funcao(msg):
+            return (
+                msg is not None
+                and msg.body is not None
+                and msg.body.strip().lower() == "qual é a função"
+            )
+
+        template_funcao = Template()
+        template_funcao.set_metadata("performative", "inform")
+        template_funcao.custom_match = match_qual_e_funcao
+        self.add_behaviour(self.ResponseFunction(), template_funcao)
+
+        # ------------------------------------
+        # Template para mensagens numéricas (x)
+        # ------------------------------------
+        def match_numero(msg):
+            return (
+                msg is not None
+                and msg.body is not None
+                and msg.body.strip().isdigit()
+            )
+
+        template_valor = Template()
+        template_valor.set_metadata("performative", "inform")
+        template_valor.custom_match = match_numero
+        self.add_behaviour(self.RecvBehav(), template_valor)
+
+    # ----------------------------
+    # Responde "Qual é a função?"
+    # ----------------------------
+    class ResponseFunction(OneShotBehaviour):
         async def run(self):
-            print("Esperando mensagem...")
-            msg = await self.receive(timeout=10)  # Espera por 10s
+            print("Esperando pergunta sobre a função...")
+            msg = await self.receive(timeout=10)
             if msg:
                 print(f"Mensagem recebida: {msg.body}")
+                response = Message(to=str(msg.sender))
+                response.set_metadata("performative", "inform")
+                response.body = random.choice(FUNCOES_DISPONIVEIS)
+                await self.send(response)
+                print("Resposta enviada!")
+            else:
+                print("Nenhuma mensagem recebida para a função.")
 
-                if msg.body == "Qual é a função":
-                  response = Message(to="marcoolivera731@xmpp.jp")
-                  response.set_metadata("performative", "inform")
-                  response.body = funcao_aleatoria
-                  await self.send(response)
-                  print("Resposta enviada!")
+    # --------------------------------
+    # Responde com o valor de f(x)
+    # --------------------------------
+    class RecvBehav(CyclicBehaviour):
+        async def run(self):
+            print("Esperando mensagem numérica...")
+            msg = await self.receive(timeout=10)
+            if msg:
+                try:
+                    conteudo = msg.body
+                    x_value = int(conteudo)
+                    resultado = self.agent.f(x_value)
+                    print(f"f({x_value}) = {resultado}")
 
-                elif msg.body.isdigit():
-                  f = grau1()
-                  x_value = int(msg.body)
-                  resultado = f(x_value)
-
-                  # valor = Message(to="marcoolivera731@xmpp.jp")
-                  # valor.set_metadata("performative", "inform")
-                  # valor.body = str(resultado)
-
-                  # await self.send(valor)  # Corrigido
-
-
-               
-
-                else:
-                  print("Mensagem não reconhecida.")
+                    resposta = Message(to=str(msg.sender))
+                    resposta.set_metadata("performative", "inform")
+                    resposta.body = f"{resultado}"
+                    await self.send(resposta)
+                except Exception as e:
+                    print(f"Erro ao processar mensagem: {e}")
             else:
                 print("Nenhuma mensagem recebida após 10 segundos.")
 
-    async def setup(self):
-        print("ReceiverAgent iniciado.")
-        self.add_behaviour(self.RecvBehav())
 
-
+# ---------------------
+# Inicia o agente SPADE
+# ---------------------
 async def main():
-    receiveragent = ReceiverAgent("marcoolivera096@xmpp.jp", "m0a5r0c8o")
-    await receiveragent.start()
+    receiver = ReceiverAgent("marcoolivera096@xmpp.jp", "m0a5r0c8o")
+    await receiver.start()
     print("Agente iniciado.")
 
-
-    while receiveragent.is_alive():
-        try:
+    try:
+        while receiver.is_alive():
             await asyncio.sleep(1)
-        except KeyboardInterrupt:
-            await receiveragent.stop()
-            break
+    except KeyboardInterrupt:
+        await receiver.stop()
+        print("Agente finalizado.")
 
 
 if __name__ == "__main__":

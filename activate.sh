@@ -10,7 +10,7 @@ gnome-terminal -- bash -c "echo 'Ativando ambiente e iniciando receiver.py'; sou
 sleep 1
 
 # Terminal para o sender.py com ambiente virtual
-gnome-terminal -- bash -c "echo 'Ativando ambiente e iniciando sender.py'; source $VENV_PATH/bin/activate; python sender.py; exec bash"
+gnome-terminal -- bash -c "echo 'Ativando ambiente e iniciando sender.py'; source $VENV_PATH/bin/activate; python sender1.py; exec bash"
 
 
 
