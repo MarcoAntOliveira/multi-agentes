@@ -5,80 +5,75 @@ from spade.message import Message
 from spade.template import Template
 import random
 import asyncio
-from include.funcoes import grau1  # Função que retorna f(x) = ax + b como lambda
+from include.funcoes import grau1, grau2, grau3  # Todas devem retornar lambdas
 
-
-FUNCOES_DISPONIVEIS = [#"A função é 1º grau",
-                      #  "A função é 2º grau",
-                       "A função é 3º grau",
-                       ]
+FUNCOES_DISPONIVEIS = [
+    "A função é 1º grau",
+    "A função é 2º grau",
+    "A função é 3º grau",
+]
 
 
 class ReceiverAgent(Agent):
     async def setup(self):
         print("ReceiverAgent iniciado.")
 
-        # Define uma função de 1º grau apenas uma vez
-        self.f = grau1()
+        self.funcao_escolhida = None
+        self.f = None  # Função a ser usada
 
-        # -------------------------------
-        # Template para "Qual é a função"
-        # -------------------------------
+        # Template: "qual é a função?"
         def match_qual_e_funcao(msg):
-            return (
-                msg is not None
-                and msg.body is not None
-                and msg.body.strip().lower() == "qual é a função"
-            )
+            return msg and msg.body and msg.body.strip().lower() == "qual é a função"
 
         template_funcao = Template()
         template_funcao.set_metadata("performative", "inform")
         template_funcao.custom_match = match_qual_e_funcao
         self.add_behaviour(self.ResponseFunction(), template_funcao)
 
-        # ------------------------------------
-        # Template para mensagens numéricas (x)
-        # ------------------------------------
+        # Template: número
         def match_numero(msg):
-            return (
-                msg is not None
-                and msg.body is not None
-                and msg.body.strip().isdigit()
-            )
+            return msg and msg.body and msg.body.strip().replace('.', '', 1).isdigit()
 
         template_valor = Template()
         template_valor.set_metadata("performative", "inform")
         template_valor.custom_match = match_numero
         self.add_behaviour(self.RecvBehav(), template_valor)
 
-    # ----------------------------
-    # Responde "Qual é a função?"
-    # ----------------------------
     class ResponseFunction(OneShotBehaviour):
         async def run(self):
             print("Esperando pergunta sobre a função...")
             msg = await self.receive(timeout=10)
             if msg:
                 print(f"Mensagem recebida: {msg.body}")
+                funcao = random.choice(FUNCOES_DISPONIVEIS)
+                self.agent.funcao_escolhida = funcao
+
+                # Seleciona a função correspondente
+                if funcao == "A função é 1º grau":
+                    self.agent.f = grau1()
+                elif funcao == "A função é 2º grau":
+                    self.agent.f = grau2()
+                elif funcao == "A função é 3º grau":
+                    self.agent.f = grau3()
+
                 response = Message(to=str(msg.sender))
                 response.set_metadata("performative", "inform")
-                response.body = random.choice(FUNCOES_DISPONIVEIS)
+                response.body = funcao
                 await self.send(response)
-                print("Resposta enviada!")
+                print(f"Função escolhida: {funcao}")
             else:
                 print("Nenhuma mensagem recebida para a função.")
 
-    # --------------------------------
-    # Responde com o valor de f(x)
-    # --------------------------------
     class RecvBehav(CyclicBehaviour):
         async def run(self):
             print("Esperando mensagem numérica...")
             msg = await self.receive(timeout=10)
             if msg:
                 try:
-                    conteudo = msg.body
-                    x_value = int(conteudo)
+                    x_value = float(msg.body.strip())
+                    if self.agent.f is None:
+                        raise Exception("Função ainda não foi escolhida. Envie 'qual é a função' primeiro.")
+
                     resultado = self.agent.f(x_value)
                     print(f"f({x_value}) = {resultado}")
 

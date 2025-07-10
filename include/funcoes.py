@@ -1,5 +1,6 @@
 import random
 
+
 # 1º grau: f(x) = ax + b
 def grau1():
     a = random.randint(-100, 100)
@@ -18,14 +19,15 @@ def grau2():
     return lambda x: a * x**2 + b * x + c
 
 # 3º grau: f(x) = ax³ + bx² + cx + d
-def grau3(a, b, c, d):
+def grau3():
     a = random.randint(-100, 100)
-    while a == 0:  # Garante que seja realmente de 2º grau
+    while a == 0:
         a = random.randint(-100, 100)
-    b = random.randint(-100,100)
-    c = random.randint(-100,100)
-    d =   random.randint(-100,100)
+    b = random.randint(-100, 100)
+    c = random.randint(-100, 100)
+    d = random.randint(-100, 100)
     return lambda x: a * x**3 + b * x**2 + c * x + d
+
 
 # Exponencial: f(x) = a * e^(b*x)
 

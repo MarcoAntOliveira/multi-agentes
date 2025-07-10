@@ -4,6 +4,7 @@ from spade.behaviour import OneShotBehaviour, CyclicBehaviour
 from spade.message import Message
 import asyncio
 from include.chutes import encontrar_raiz_reta, encontrar_zeros_grau2, encontrar_zeros_grau3
+
 # Listas globais para armazenar pares (x, y)
 x_vals = []
 y_vals = []
@@ -22,7 +23,7 @@ class SenderAgent(Agent):
         def __init__(self):
             super().__init__()
             self.funcao_confirmada = False
-            self.x_enviados = [-1, 0, 1, 2, 3]  # Pode aumentar aqui para mais pontos
+            self.x_enviados = [1, 2, 3, 4]  # Pode aumentar aqui para mais pontos
             self.index = 0
 
         async def run(self):
@@ -56,6 +57,7 @@ class SenderAgent(Agent):
                           zero_funcao = encontrar_zeros_grau2(x_vals, y_vals)
                         elif self.tipo_funcao == "A função é 3º grau":
                           zero_funcao = encontrar_zeros_grau3(x_vals, y_vals)
+                          # zero_funcao = bisseccao_dados(x_vals, y_vals);
 
                         print(f"O zero da função é dada por {zero_funcao}")
                         await self.agent.stop()
